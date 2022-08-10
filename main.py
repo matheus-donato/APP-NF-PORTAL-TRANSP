@@ -1,17 +1,13 @@
 import pandas as pd
 import streamlit as st
+from millify import millify
 
 # Definindo tema da aplicação
 
 # Definindo funções úteis
-
-
-
 @st.cache
-def lendo_nfs(file = "APP/Data/202109_202206_NFe.parquet"):
+def lendo_nfs(file = "Data/202109_202206_NFe.parquet"):
     nfs = pd.read_parquet(file)
-    nfs["DATA EMISSÃO"] = pd.to_datetime(nfs["DATA EMISSÃO"])
-    nfs.set_index("DATA EMISSÃO",inplace=True)
     return nfs
 
 def Info_geral(df_notas):
