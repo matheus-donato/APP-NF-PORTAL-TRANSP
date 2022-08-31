@@ -1,10 +1,9 @@
-from enum import unique
-import json
 import streamlit as st
 import pandas as pd
-import geopandas as gpd
-import folium
-from streamlit_folium import folium_static
+
+st.set_page_config(
+    layout="wide"
+)
 
 st.title("Emitentes")
 
@@ -24,12 +23,16 @@ ncm = st.sidebar.text_input("Escreva o NCM desejado:")
 ufs = emitentes["UF EMITENTE"].unique()
 uf = st.sidebar.multiselect("Selecione a(s) UF(s):",ufs)
 
-if cnae != '':
+if len(cnae) > 0:
     emitentes_filtro = emitentes.query(f"cnae_fiscal.str.startswith('{cnae}')")
 if len(uf) > 0:  
     emitentes_cnae = emitentes_filtro.query(f"`UF EMITENTE` in {uf}")
-if ncm != '':
+if len(ncm) > 0:
     emitentes_filtro = emitentes_filtro.query(f"NCM.str.startswith('{ncm}')")
 
+if any((len(cnae) > 0,len(uf) > 0,len(ncm) > 0)):
+    st.table(emitentes_filtro.sort_values(["total_notas","total_emi"], ascending=False))
 
-st.table(emitentes_filtro.sort_values(["total_notas","total_emi"], ascending=False))
+else:
+    st.info("Sem informações para pesquisar.")
+
